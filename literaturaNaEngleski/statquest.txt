@@ -1,0 +1,180 @@
+FITTING A LINE TO DATA, LEAST SQUARES, LINEAR REGRESSION
+
+We can measure how well the line fits the data by seeing how close it is to the data points.
+Squaring ensures that each term is positive.
+"Sum of squared residuals" because the residuals are the differences between the real data
+and the line, and we are summing the square of these values.
+To find the sweet spot between horiontal and vertical line.
+y = a*x + b
+a -> the slope of the line
+b -> the "y" intercept of the line
+Since we want the line to give us the smallest sum of squares, this method for finding the best
+values for "a" and "b" is called "Least Squares".
+To find the optimal rotation of the line, we take the derivative of the function.
+The derivative tells us the slope of the function at every point.
+"The Least Squares" value is the slope of 0.
+
+Important Concept #1:
+We want to minimize the square of the distance between the observed values and the line.
+Important Concept #2:
+We do this by taking the derivative and finding where it is equal to = 0.
+
+The final line minimizes the sums of squares (it gives the "least squares") between it and the 
+real data.
+
+
+**** LINEAR REGRESSION ****
+(GENERAL LINEAR MODELS)
+
+The Main Ideas
+1: Use least-squares to fit a line to the data
+2: Calculate R^2
+3: Calculate a p-value for R^2
+
+RESIDUAL -> the distance from a line to a data point
+
+Calculating the R^2 is the first step to calculating how good a guess (of the line)
+is going to be.
+
+SS(mean) -> sum of sqaures around the mean
+SS(mean) = (data-mean)^2
+variation around the mean: var(mean) = (data-mean)^2/n
+n -> sample size
+var(mean) -> average sum of squares per item
+SS(fit) -> sum of squares around the least-squares fit
+SS(fit) = (data-line)^2
+Var(fit) = (data-line)^2/n = SS(fit)/n
+
+Generally: Variance(something) = sums of squares/the number of those things
+-> average sum of squares
+
+R^2 tells us how much of the variation in mouse size can be explained by taking mouse weight
+into account.
+R^2 = ( Var(mean) - Var(fit) ) / Var(mean)
+R^2 = ( SS(mean) - SS(fit) ) / SS(mean)
+
+e.g. R^2 = 60% -> 60% of specs on y-axis can be explained by specs on the x-axis.
+Equations with more parameters will never make SS(fit) worse than equations with fewer parameters.
+Adjusted R^2 value scales R^2 by the number of parameters.
+
+Problem: calculating the R^2 for 2 random points, always 100%
+-> p-value
+
+R^2 = the variation in y-axis values explained by x-axis values / the variation in y-axis value without taking
+                                                                    x-axis values into account
+p-value for R^2 comes from "F"
+F = the variation y-axis values explained by x-axis values / the variation in y-axis value not explained
+                                                                    by x-axis values
+F = ( SS(mean) - ( SS(fit) / ( p(fit) - p(mean) ) ) )
+        /
+    SS(fit) / ( n - p(fit) )
+
+The numbers on the right are the "degrees of the freedom"
+They turn the sums of squares into variances
+
+p(fit) -> number of parameters in the fit line
+p(mean) -> number of parameters in the mean line
+
+p(mean) = 1 (only the y-intercept)
+p(fit) = 2 (y-intercept and the slope)
+
+denominator -> the variation in y-axis values not explained by the fit
+
+
+n - p(fit) because F would be a really large number
+
+generating p-value: making histogram of Fs for various sets of random data
+                    it is the number of more extreme values divided by all the values
+
+in practice, people use the line on histogram to Calculate the p-value
+the degrees of freedom determine the shape
+
+when ( n - p(fit) ) = 10, the distribution tapers off faster
+-> the p-value will be smaller when there are more samples relative to the number of parameters in the fit equation.
+
+
+THE MAIN IDEAS
+Linear regression
+1: Quantifies the relationship in the data (this is R^2)
+    it needs to be large
+2: Determines how reliable that relationship is (the p-value that we calculate with "F")
+    it needs to be small
+
+****** MULTIPLE REGRESSION ******
+
+Adding additional dimensions.
+Calculating R^2 is the same for both simple and multiple regression.
+For multiple regression, you adjust R^2 to compensate for the additional parameters of the equation.
+Calculating "F" and p-value is quite the same.
+p -> number of parameters
+p(mean) = 1
+
+Comparing simple and multiple regression:
+This will tell us if it is worth the time and trouble to collect the Tail Length Data because we will compare a fit without it
+(the simple regression) to a fit with it (the multiple regression).
+
+F-value: replacing the "mean" values with simple regression values.
+
+If the difference in R^2 values between the simple and multiple regressions is "big" and the p-value is "small", then adding Tail Length to 
+the model is worth the trouble.
+
+
+****** T-TESTS AND ANOVA ******
+
+T-TEST: the goal is to compare means and see if they are significantly different from each other.
+If the same method can calculate p-values for a linear regression and a t-test, then we can easily calculate p-values fro more complicated
+situations.
+
+1: ignore the x-axis and find the overall mean
+2: calculate SS(mean), the sum of squared residuals around the mean
+3: Fit a line to the data (we care about the x-axis again)
+4: fit a line to the t-test
+    4.1: find least squares fit to the control data -> mean that intercepts y-axis
+    4.2: fit a line to the mutant data, the least squares fit is the mean of the mutant data
+    4.3: we fit two lines to the data
+    4.4: combine 2 lines into a single equation
+    4.5: goal is to have a flexible way for a computer to solve this, and every other "least squares" based problem, without having to
+         create a whole new method each time
+    Controlled data: y = 1 x controlled mean + 0 x mutated mean + residual
+    Mutated data: y = 0 x controlled mean + 1 x mutated mean + residual
+    When we isolate the 1s and 0s, they form a matrix called a "design matrix"
+
+    e.g.:   1   0
+            1   0
+
+            0   1
+            0   1
+
+     coumn1 turns the control mean on or off, column2 turns the mutant mean on or off
+    In practice, the role of each coulmn is assumed, and the equation is written out like this: y = mean(contro) + mean(mutant)
+
+5: Calculate SS(fit), the sum of squares of the residuals around the fitted line(s)
+
+
+ANOVA: test if all x categories are the same.
+
+!! The design matrices are not the standard design matrices used for doing t-tests and ANOVA.
+usually:    1   0
+            1   0
+            1   1
+            1   1
+
+
+***** DESIGN MATRICES *****
+
+
+1   0
+1   0
+1   1
+1   1
+
+In this version, all measurements, control and mutant, turn on mean(control).
+But only the mutant measurements turn on difference(mutant - control).
+We get the same F-value -> same p-value.
+
+A design matrix full of 1s and 0s is perfect for doing t-test or ANOVAs any time we have different categories of data - But
+we can use other numbers (2nd column is for the slope, 1st coumn is for the y-intercept).
+
+
+
+
