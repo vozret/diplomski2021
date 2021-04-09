@@ -45,8 +45,7 @@ class FESB_MLID(keras.utils.Sequence):
             img = load_img(path)
             x_img = img_to_array(img)
             x_img = resize(x_img, (img_height, img_width, 3), mode='constant')
-            X[image_index] = x_img
-            X[image_index, ..., 0] = x_img.squeeze() / 255
+            X[image_index] = x_img / 255
 
         y = np.zeros((self.batch_size, img_height,
                       img_width, 3), dtype=np.float32)
